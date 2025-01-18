@@ -27,5 +27,5 @@ class HomeController extends Controller
     return view('dashboard', compact('tasks'));
   }
 
-  // 引数に文字を受け取ったら、その文字を...
+  // 引数に文字を受け取ったら、その文字を....
 }
