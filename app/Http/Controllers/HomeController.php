@@ -4,8 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Services\TaskService;
+
 class HomeController extends Controller
 {
+  protected $taskService;
+
+  public function __construct(TaskService $taskService)
+  {
+    $this->taskService = $taskService;
+  }
+
   public function index()
   {
     return view('index');
@@ -13,6 +22,10 @@ class HomeController extends Controller
 
   public function dashboard()
   {
-    return view('dashboard');
+    $tasks = $this->taskService->getAllTasks();
+    dd($tasks);
+    return view('dashboard', compact('tasks'));
   }
+
+  // 引数に文字を受け取ったら、その文字を
 }

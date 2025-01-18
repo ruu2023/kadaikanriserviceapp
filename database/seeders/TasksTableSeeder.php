@@ -16,21 +16,21 @@ class TasksTableSeeder extends Seeder
   {
     DB::table('tasks')->insert(
       [
-        'user_id' => 2,
+        'user_id' => 1,
         'content' => 'Laravel',
         'row_order' => 1,
         'created_at' => "2024-12-09",
         'updated_at' => "2024-12-09"
       ],
       [
-        'user_id' => 2,
+        'user_id' => 1,
         'content' => 'PHP',
         'row_order' => 2,
         'created_at' => "2024-12-09",
         'updated_at' => "2024-12-09"
       ],
       [
-        'user_id' => 2,
+        'user_id' => 1,
         'content' => 'Ruby',
         'row_order' => 3,
         'created_at' => "2024-12-09",
