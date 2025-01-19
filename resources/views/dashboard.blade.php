@@ -17,6 +17,8 @@
       @csrf
       <button type="submit" class="btn btn-danger mx-2">ログアウト</button>
   </form>
+
+
   {{-- タスクをループ表示 --}}
   @if ($tasks->isNotEmpty())
     @foreach ($tasks as $task)
@@ -44,6 +46,10 @@
             作成
         </button>
     </div>
+
+    <div id="app"></div>
+    <script type="module" src="{{ mix('resources/js/app.js') }}"></script>
+
 </form>
 
 </body>
