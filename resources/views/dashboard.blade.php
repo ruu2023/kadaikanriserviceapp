@@ -19,7 +19,7 @@
   {{-- タスクをループ表示 --}}
   @foreach ($tasks as $task)
   <li>
-      {{ $task->name }} {{-- タスク名を表示 --}}
+      {{ $task->date }} {{-- タスク名を表示 --}}
   </li>
   @endforeach
 
