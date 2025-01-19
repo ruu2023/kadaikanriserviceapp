@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\LogoutController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ダッシュボードのルート（ログインが必要）
-Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware('auth')->name('dashboard');
+Route::get('/dashboard', [TaskController::class, 'dashboard'])->middleware('auth')->name('dashboard');
 
 // ユーザー登録のルート
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Task extends Model
 {
@@ -13,10 +14,11 @@ class Task extends Model
 
   public static function createTask(array $data)
   {
+    $rowOrder = self::max('row_order') + 1;
     return self::create([
-      'content' => $data['name'],
-      'user_id' => $data['description'] ?? null,
-      'row_order' => $data['due_date'] ?? null,
+      'content' => $data['content'],
+      'user_id' => Auth::id(),
+      'row_order' => $rowOrder,
     ]);
   }
 }

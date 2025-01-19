@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-  public function index()
+  public function dashboard()
   {
-    $content = Task::find(2)->content;
-    return view("dashboard", ["content" => $content]);
+    $tasks = Task::all();
+    return view("dashboard", compact('tasks'));
+  }
+  public function store(Request $request)
+  {
+    $data =  $request->all();
+    Task::createTask($data);
+    return redirect()->route('dashboard');
   }
 }

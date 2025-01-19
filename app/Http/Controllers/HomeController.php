@@ -19,10 +19,4 @@ class HomeController extends Controller
   {
     return view('index');
   }
-
-  // public function dashboard()
-  // {
-  //   $tasks = Task::all();
-  //   return view('dashboard', compact('tasks'));
-  // }
 }
