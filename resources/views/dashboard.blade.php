@@ -17,11 +17,14 @@
       <button type="submit" class="btn btn-danger mx-2">ログアウト</button>
   </form>
   {{-- タスクをループ表示 --}}
-  @foreach ($tasks as $task)
-  <li>
-      {{ $task->content }} {{-- タスク名を表示 --}}
-  </li>
-  @endforeach
+  @if ($tasks->isNotEmpty())
+    @foreach ($tasks as $task)
+      <p>{{ $task->content }}</p>
+      <p>{{ $task->created_at->format('Y-n-j') }}</p>
+    @endforeach
+  @else
+    <p>タスクがありません。</p>
+  @endif
 
 </body>
 </html>

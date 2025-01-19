@@ -10,6 +10,6 @@ class TaskController extends Controller
   public function index()
   {
     $content = Task::find(2)->content;
-    return view("dashboard", ["content" => $content]); // resources/views/task.blade.php
+    return view("dashboard", ["content" => $content]);
   }
 }

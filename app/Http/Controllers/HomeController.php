@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Task;
 use App\Services\TaskService;
 
 class HomeController extends Controller
@@ -20,9 +20,9 @@ class HomeController extends Controller
     return view('index');
   }
 
-  public function dashboard()
-  {
-    $tasks = $this->taskService->getAllTasks();
-    return view('dashboard', compact('tasks'));
-  }
+  // public function dashboard()
+  // {
+  //   $tasks = Task::all();
+  //   return view('dashboard', compact('tasks'));
+  // }
 }
