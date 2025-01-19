@@ -23,9 +23,6 @@ class HomeController extends Controller
   public function dashboard()
   {
     $tasks = $this->taskService->getAllTasks();
-    dd($tasks);
     return view('dashboard', compact('tasks'));
   }
-
-  // 引数に文字を受け取ったら変更しました
 }
