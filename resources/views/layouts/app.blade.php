@@ -9,7 +9,7 @@
   @vite(['resources/css/app.scss', 'resources/js/app.js'])
 </head>
 
-<body  id="app">
+<body>
   <header class="relative flex justify-between bg-white shadow-lg p-6">
       <h2 class="text-center">ページタイトル</h2>
       @auth
