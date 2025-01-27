@@ -25,3 +25,6 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::resource('tasks', TaskController::class);
+
+// タスクの並び替えのルート
+Route::post('/update-order', [TaskController::class, 'updateOrder']);

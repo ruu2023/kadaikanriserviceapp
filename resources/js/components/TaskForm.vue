@@ -28,46 +28,67 @@
     <!-- タスク一覧 -->
     <div class="mt-4">
       <h2 class="text-lg font-semibold">タスク一覧</h2>
-      <ul>
-        <li v-for="(task, index) in state.tasks" :key="task.id" class="mt-2">
+      <draggable
+      v-model="state.tasks"
+      @end="onDragEnd"
+      animation="200"
+      itemKey="id"
+      ghost-class="dragging"
+      chosen-class="chosen"
+      >
+        <template #item="{ element, index }">
+        <li :key="element.id" class="mt-2 bg-slate-200 shadow-lg list-none">
           <!-- タスクの表示または編集 -->
-          <div v-if="editIndex === index">
+          <form
+            v-if="editIndex === index"
+            @submit.prevent="updateTask(index)"
+            class="flex items-center h-10 justify-between"
+          >
             <input
               v-model="editedContent"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              class="block flex-1 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
-            <div class="flex space-x-2 mt-2">
+            <div>
               <button
-                @click="updateTask(index)"
-                class="text-green-500 hover:underline"
+                type="submit"
+                class="text-green-500 hover:underline ml-2"
               >
                 更新
               </button>
               <button
+                type="button"
                 @click="cancelEdit"
-                class="text-gray-500 hover:underline"
+                class="text-gray-500 hover:underline ml-2"
               >
                 キャンセル
               </button>
             </div>
-          </div>
-          <div v-else>
-            {{ task.content }} {{ formatDate(task.created_at) }}
-            <button
-              @click="startEdit(index, task.content)"
-              class="text-blue-500 hover:underline ml-2"
-            >
-              編集
-            </button>
-            <button
-              @click="deleteTask(task.id)"
-              class="text-red-500 hover:underline ml-2"
-            >
-              削除
-            </button>
+          </form>
+          <div
+          v-else
+          class="flex items-center h-10 justify-between"
+          >
+            <p class="px-3 py-2">
+              {{ element.content }} {{ formatDate(element.created_at) }}
+            </p>
+            <div>
+              <button
+                @click="startEdit(index, element.content)"
+                class="text-blue-500 hover:underline ml-2"
+              >
+                編集
+              </button>
+              <button
+                @click="deleteTask(element.id)"
+                class="text-red-500 hover:underline ml-2"
+              >
+                削除
+              </button>
+            </div>
           </div>
         </li>
-      </ul>
+      </template>
+    </draggable>
     </div>
   </div>
 </template>
@@ -75,8 +96,13 @@
 <script>
 import { reactive, onMounted, ref } from 'vue';
 import axios from 'axios';
+import draggable from 'vuedraggable';
+
 
 export default {
+  components: {
+    draggable,
+  },
   setup() {
     const state = reactive({
       content: '', // フォームの入力値
@@ -85,6 +111,7 @@ export default {
 
     const editIndex = ref(null); // 編集中のインデックス
     const editedContent = ref(""); // 編集中の内容
+
 
     // 編集開始
     const startEdit = (index, content) => {
@@ -162,6 +189,23 @@ export default {
       }
     };
 
+    // タスク並び替え
+    const onDragEnd = async () => {
+      const updatedTasks = state.tasks.map((task, index) => ({
+        ...task,
+        row_order: index + 1,
+      }));
+
+      try {
+        await axios.post("/update-order", {
+          tasks: updatedTasks,
+        });
+        console.log("Order updated successfully");
+      } catch (error) {
+        console.error("Error updating order:", error);
+      }
+    };
+
     onMounted(fetchTasks); // コンポーネントのマウント時にタスク一覧を取得
 
     return {
@@ -175,7 +219,18 @@ export default {
       updateTask,
       cancelEdit,
       deleteTask,
+      onDragEnd,
     };
   },
 };
 </script>
+<style>
+/* ドラッグ中の要素 */
+.dragging {
+  opacity: 0;
+}
+/* ドラッグ中の選択要素 */
+.chosen {
+
+}
+</style>

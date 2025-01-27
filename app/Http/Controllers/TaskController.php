@@ -14,7 +14,7 @@ class TaskController extends Controller
   }
   public function index()
   {
-    $tasks = Task::all();
+    $tasks = Task::orderBy('row_order', 'asc')->get();
     return response()->json($tasks);
   }
   public function store(Request $request)
@@ -59,5 +59,27 @@ class TaskController extends Controller
     $task->delete();
 
     return response()->json(['message' => 'タスク削除成功'], 200);
+  }
+  public function updateOrder(Request $request)
+  {
+    // バリデーション
+    $validated = $request->validate([
+      'tasks' => 'required|array',
+      'tasks.*.id' => 'required|integer|exists:tasks,id',
+      'tasks.*.row_order' => 'required|integer',
+    ]);
+
+    try {
+      foreach ($validated['tasks'] as $taskData) {
+        // 各タスクの order を更新
+        Task::where('id', $taskData['id'])
+          ->update(['row_order' => $taskData['row_order']]);
+      }
+
+      return response()->json(['message' => 'Order updated successfully'], 200);
+    } catch (\Exception $e) {
+      // エラー時のレスポンス
+      return response()->json(['message' => 'Error updating order', 'error' => $e->getMessage()], 500);
+    }
   }
 }
