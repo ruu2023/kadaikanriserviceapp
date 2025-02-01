@@ -1,5 +1,4 @@
 <template>
-  <!-- <SideBarComponent /> -->
   <div class="flex flex-col h-full">
 
     <!-- タスク一覧 -->
@@ -45,7 +44,8 @@
           class="flex items-center h-10 justify-between"
           >
             <p class="px-3 py-2 flex-1 flex justify-between">
-              <p>{{ element.content }}</p> <p>{{ formatDate(element.created_at) }}</p>
+              <!-- TODO:hiddenを修正 -->
+              <p>{{ element.content }}</p> <p class="hidden">{{ formatDate(element.created_at) }}</p>
             </p>
             <div>
               <button
@@ -54,9 +54,10 @@
               >
                 編集
               </button>
+              <!-- TODO:hiddenを修正 -->
               <button
                 @click="deleteTask(element.id)"
-                class="text-red-500 hover:underline ml-2"
+                class="text-red-500 hover:underline ml-2 hidden"
               >
                 削除
               </button>
@@ -98,12 +99,11 @@
 import { reactive, onMounted, ref } from 'vue';
 import axios from 'axios';
 import draggable from 'vuedraggable';
-import SideBarComponent from "./Sidebar.vue";
 
 export default {
+  name: 'TaskForm',
   components: {
-    draggable,
-    SideBarComponent, // コンポーネントを登録
+    draggable
   },
   setup() {
     const state = reactive({

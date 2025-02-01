@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "SideBarComponent",
+  name: "SideBar",
   setup() {
     return {
       user: window.Laravel.user,
