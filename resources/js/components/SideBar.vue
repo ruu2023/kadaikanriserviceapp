@@ -26,9 +26,9 @@ export default {
   methods: {
     async logout() {
       try {
-          await axios.post('/logout')
+          await axios.post(route('logout'))
           // ログアウト後にリダイレクト
-          window.location.href = '/'
+          window.location.href = route('home')
       } catch (error) {
           console.error('Logout failed:', error)
       }
