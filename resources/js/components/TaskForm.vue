@@ -171,28 +171,19 @@ export default {
         });
 
         const newTask = response.data; // サーバーから返ってきたタスクを取得
-        state.tasks.push(newTask); // タスク一覧に追加
+        state.tasks.unshift(newTask); // タスク一覧に追加
+
+        // 並び順のAPIリクエストを送信
+        await updateTaskOrder();
+
         state.content = ''; // 入力フィールドをリセット
       } catch (error) {
         console.error('エラーが発生しました:', error);
       }
     };
 
-    // タスク削除
-    const deleteTask = async (id) => {
-      try {
-        // API呼び出し
-        await axios.delete(`/tasks/${id}`);
-
-        // ローカル状態から削除
-        state.tasks = state.tasks.filter((task) => task.id !== id);
-      } catch (error) {
-        console.error("タスク削除失敗:", error);
-      }
-    };
-
     // タスク並び替え
-    const onDragEnd = async () => {
+    const updateTaskOrder = async () => {
       const updatedTasks = state.tasks.map((task, index) => ({
         ...task,
         row_order: index + 1,
@@ -205,6 +196,24 @@ export default {
         console.log("Order updated successfully");
       } catch (error) {
         console.error("Error updating order:", error);
+      }
+    };
+
+    // ドラッグ時にタスクの並び替え
+    const onDragEnd = async () => {
+      await updateTaskOrder();
+    };
+
+    // タスク削除
+    const deleteTask = async (id) => {
+      try {
+        // API呼び出し
+        await axios.delete(`/tasks/${id}`);
+
+        // ローカル状態から削除
+        state.tasks = state.tasks.filter((task) => task.id !== id);
+      } catch (error) {
+        console.error("タスク削除失敗:", error);
       }
     };
 
