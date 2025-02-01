@@ -2,12 +2,12 @@
   <div class="flex h-screen">
     <!-- サイドバー -->
     <div
-    :class="{
+      :class="{
         'show': isSidebarOpen
       }"
-      class="sidebar fixed md:static md:l-0! inset-y-0 w-48 z-50 text-white bg-slate-900 transition-transform duration-300"
+      class="sidebar fixed md:static md:l-0! inset-y-0 w-64 z-50 text-white bg-slate-800 transition-transform duration-300"
     >
-      <side-bar-component></side-bar-component>
+      <side-bar-component @tab-changed="updateTab" ></side-bar-component>
     </div>
 
     <!-- オーバーレイ（サイドバーが開いているときのみ表示） -->
@@ -25,7 +25,7 @@
       </div>
       <!-- タスクフォーム -->
       <div class="flex-1 overflow-y-auto">
-        <task-form></task-form>
+        <component :is="currentTabComponent"></component>
       </div>
       <!-- フッター -->
       <div>
@@ -37,26 +37,42 @@
 
 <script>
 import TaskForm from './components/TaskForm.vue';
+import Archive from './components/Archive.vue';
 import HeaderComponent from './components/Header.vue';
 import FooterComponent from './components/Footer.vue';
 import SideBarComponent from './components/SideBar.vue';
 
 export default {
-  data() {
-    return {
-      isSidebarOpen: false, // サイドバーが開いているかどうか
-    };
-  },
   components: {
     TaskForm,
+    Archive,
     HeaderComponent,
     FooterComponent,
     SideBarComponent,
+  },
+  data() {
+    return {
+      isSidebarOpen: false, // サイドバーが開いているかどうか
+      currentTab: 'TaskForm',  // 初期表示
+    };
+  },
+  computed: {
+    currentTabComponent() {
+      if (this.currentTab === 'TaskForm') {
+        return 'TaskForm';
+      } else if (this.currentTab === 'Archive') {
+        return 'Archive';
+      }
+      return 'TaskForm';  // デフォルト
+    }
   },
   methods: {
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },
+    updateTab(tab) {
+      this.currentTab = tab;
+    }
   },
 }
 </script>
