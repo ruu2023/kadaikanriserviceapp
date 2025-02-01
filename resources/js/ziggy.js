@@ -1,0 +1,5 @@
+const Ziggy = {"url":"http:\/\/localhost","port":null,"defaults":{},"routes":{"dashboard":{"uri":"dashboard","methods":["GET","HEAD"]},"home":{"uri":"\/","methods":["GET","HEAD"]},"register":{"uri":"register","methods":["GET","HEAD"]},"login":{"uri":"login","methods":["GET","HEAD"]},"logout":{"uri":"logout","methods":["POST"]},"tasks.index":{"uri":"tasks","methods":["GET","HEAD"]},"tasks.create":{"uri":"tasks\/create","methods":["GET","HEAD"]},"tasks.store":{"uri":"tasks","methods":["POST"]},"tasks.show":{"uri":"tasks\/{task}","methods":["GET","HEAD"],"parameters":["task"]},"tasks.edit":{"uri":"tasks\/{task}\/edit","methods":["GET","HEAD"],"parameters":["task"]},"tasks.update":{"uri":"tasks\/{task}","methods":["PUT","PATCH"],"parameters":["task"],"bindings":{"task":"id"}},"tasks.destroy":{"uri":"tasks\/{task}","methods":["DELETE"],"parameters":["task"]},"storage.local":{"uri":"storage\/{path}","methods":["GET","HEAD"],"wheres":{"path":".*"},"parameters":["path"]}}};
+if (typeof window !== 'undefined' && typeof window.Ziggy !== 'undefined') {
+  Object.assign(Ziggy.routes, window.Ziggy.routes);
+}
+export { Ziggy };

@@ -9,6 +9,7 @@
             Logout
         </button>
       </form>
+      <a :href="route('home')">Home</a>
     </div>
   </div>
 </template>
@@ -16,10 +17,11 @@
 <script>
 export default {
   name: "SideBarComponent",
-  data() {
+  setup() {
     return {
-        user: window.Laravel.user
-    }
+      user: window.Laravel.user,
+      route
+    };
   },
   methods: {
     async logout() {

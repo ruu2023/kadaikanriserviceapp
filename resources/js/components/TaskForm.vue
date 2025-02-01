@@ -101,7 +101,6 @@ import axios from 'axios';
 import draggable from 'vuedraggable';
 import SideBarComponent from "./Sidebar.vue";
 
-
 export default {
   components: {
     draggable,

@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Task Page</title>
   @vite(['resources/css/app.scss', 'resources/js/app.js'])
+  @routes
 </head>
 <body>
   <h2 class="text-center mb-4">ダッシュボード</h2>
