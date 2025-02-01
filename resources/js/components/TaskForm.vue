@@ -25,6 +25,8 @@
       </div>
     </form>
 
+    <SideBarComponent />
+
     <!-- タスク一覧 -->
     <div class="mt-4">
       <h2 class="text-lg font-semibold">タスク一覧</h2>
@@ -68,8 +70,8 @@
           v-else
           class="flex items-center h-10 justify-between"
           >
-            <p class="px-3 py-2">
-              {{ element.content }} {{ formatDate(element.created_at) }}
+            <p class="px-3 py-2 flex-1 flex justify-between">
+              <p>{{ element.content }}</p> <p>{{ formatDate(element.created_at) }}</p>
             </p>
             <div>
               <button
@@ -97,11 +99,13 @@
 import { reactive, onMounted, ref } from 'vue';
 import axios from 'axios';
 import draggable from 'vuedraggable';
+import SideBarComponent from "./Sidebar.vue";
 
 
 export default {
   components: {
     draggable,
+    SideBarComponent, // コンポーネントを登録
   },
   setup() {
     const state = reactive({

@@ -17,8 +17,12 @@
       @csrf
       <button type="submit" class="btn btn-danger mx-2">ログアウト</button>
   </form>
-
   <div id="app"></div>
-
+  <!-- ユーザーデータをグローバルに公開 -->
+  <script>
+    window.Laravel = {
+      user: @json(Auth::user())
+    }
+  </script>
 </body>
 </html>
