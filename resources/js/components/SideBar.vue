@@ -1,6 +1,5 @@
 <template>
   <div class="sidebar">
-    <h2>Sidebar</h2>
     <div>
       <p>ログイン中: {{ user.name }}</p>
       <!-- ログアウトボタン -->

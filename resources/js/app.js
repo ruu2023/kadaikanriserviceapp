@@ -1,5 +1,5 @@
 import "./bootstrap";
 import { createApp } from "vue";
-import TaskForm from "./components/TaskForm.vue";
+import App from "./App.vue";
 
-createApp(TaskForm).mount("#app");
+createApp(App).mount("#app");
