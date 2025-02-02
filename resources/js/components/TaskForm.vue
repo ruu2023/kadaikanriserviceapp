@@ -18,7 +18,10 @@
           @click="focusTask(element.content, index)"
           class="flex items-center h-10 justify-between"
           >
-            <div class="px-3 py-2 flex-1 flex justify-between">
+            <div class="px-3 py-2 flex-1 flex space-x-2 items-center justify-between">
+              <div>
+                <button class="border border-slate-800 p-2 text-xs"  @click.stop="handleDone(element.id)">Done</button>
+              </div>
               <!-- TODO:hiddenを修正 -->
               <p class="line-clamp-2 break-all w-full">{{ element.content }}</p> <p class="hidden">{{ formatDate(element.created_at) }}</p>
             </div>
@@ -133,15 +136,10 @@ const onDragEnd = async () => {
   await updateTaskOrder();
 };
 
-// タスク削除
-const deleteTask = async (id) => {
-  try {
-    await axios.delete(`/tasks/${id}`);
-    taskStore.tasks = taskStore.tasks.filter((task) => task.id !== id);
-  } catch (error) {
-    console.error("タスク削除失敗:", error);
-  }
-};
+//タスクの完了
+const handleDone = () => {
+  console.log("done");
+}
 
 // コンポーネントマウント時にタスク取得
 onMounted(fetchTasks);
