@@ -7,17 +7,17 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    isOpen: Boolean,
-  },
-  emits: ["close"],
-  methods: {
-    closeModal() {
-      this.$emit("close");
-    },
-  },
+<script setup>
+import { defineProps, defineEmits } from "vue";
+
+const props = defineProps({
+  isOpen: Boolean, // 親コンポーネントからpropsの受取り
+});
+
+const emit = defineEmits(["close"]);
+
+const closeModal = () => {
+  emit("close"); // 親コンポーネントにイベントを送信
 };
 </script>
 
