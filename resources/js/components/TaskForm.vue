@@ -36,7 +36,7 @@
       <div class="flex-1">
         <input
           type="text"
-          v-model="state.content"
+          v-model="inputContent"
           id="content"
           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           placeholder="タスク名を入力"
@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useTaskStore } from '@/stores/taskStore';
 
 import axios from 'axios';
@@ -67,12 +67,11 @@ import draggable from 'vuedraggable';
 
 // タスクの状態管理
 const taskStore = useTaskStore();
-const state = reactive({
-  content: '', // フォームの入力値
-});
 
-const errorMessage = ref("");      // エラーメッセージ
+const inputContent = ref(''); // 入力フォーム
+const errorMessage = ref(''); // エラーメッセージ
 
+// 親コンポーネントへイベントを渡す
 const emit = defineEmits(["task-selected", "task"]);
 
 // フォーカス（モーダル）を開く
@@ -99,7 +98,7 @@ const submitTask = async () => {
   errorMessage.value = ""; // 送信前にリセット
   try {
     const response = await axios.post('/tasks', {
-      content: state.content,
+      content: inputContent.value,
     });
 
     const newTask = response.data;
@@ -107,7 +106,7 @@ const submitTask = async () => {
 
     await updateTaskOrder(); // 並び順のAPIリクエスト
 
-    state.content = ''; // 入力リセット
+    inputContent.value = ''; // 入力リセット
   } catch (error) {
     console.error('エラーが発生しました:', error.response?.data?.message || error);
     errorMessage.value = error.response?.data?.message || "不明なエラーが発生しました";
