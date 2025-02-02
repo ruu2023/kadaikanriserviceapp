@@ -14,6 +14,7 @@ return [
     */
   'attributes' => [
     'name' => '名前',
+    'content' => 'タスク名',
   ],
 
   'accepted'        => ':attributeを承認してください。',

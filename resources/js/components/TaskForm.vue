@@ -43,10 +43,10 @@
           v-else
           class="flex items-center h-10 justify-between"
           >
-            <p class="px-3 py-2 flex-1 flex justify-between">
+            <div class="px-3 py-2 flex-1 flex justify-between">
               <!-- TODO:hiddenを修正 -->
-              <p>{{ element.content }}</p> <p class="hidden">{{ formatDate(element.created_at) }}</p>
-            </p>
+              <p class="line-clamp-2 break-all w-full">{{ element.content }}</p> <p class="hidden">{{ formatDate(element.created_at) }}</p>
+            </div>
             <div>
               <button
                 @click="startEdit(index, element.content)"
@@ -68,7 +68,11 @@
     </draggable>
     </div>
 
+    <!-- エラーメッセージ表示 -->
+    <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+
     <form @submit.prevent="submitTask" class="flex items-center w-full space-x-2 my-4 p-2">
+
       <!-- タスク名 -->
       <div class="flex-1">
         <input
@@ -113,7 +117,7 @@ export default {
 
     const editIndex = ref(null); // 編集中のインデックス
     const editedContent = ref(""); // 編集中の内容
-
+    const errorMessage = ref(""); // エラーメッセージを格納
 
     // 編集開始
     const startEdit = (index, content) => {
@@ -165,6 +169,7 @@ export default {
 
     // フォーム送信時に新しいタスクを追加
     const submitTask = async () => {
+      errorMessage.value = ""; // 送信前にリセット
       try {
         const response = await axios.post('/tasks', {
           content: state.content,
@@ -178,7 +183,12 @@ export default {
 
         state.content = ''; // 入力フィールドをリセット
       } catch (error) {
-        console.error('エラーが発生しました:', error);
+        console.error('エラーが発生しました:', error.response.data.message);
+        if (error.response && error.response.data.message) {
+          errorMessage.value = error.response.data.message; // エラー内容をセット
+        } else {
+          errorMessage.value = "不明なエラーが発生しました";
+        }
       }
     };
 
@@ -223,9 +233,9 @@ export default {
       state,
       editIndex,
       editedContent,
+      errorMessage,
       submitTask,
       formatDate,
-      editedContent,
       startEdit,
       updateTask,
       cancelEdit,

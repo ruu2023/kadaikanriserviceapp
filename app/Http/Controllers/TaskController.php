@@ -20,7 +20,7 @@ class TaskController extends Controller
   public function store(Request $request)
   {
     $data = $request->validate([
-      'content' => 'required|string|max:255',
+      'content' => 'required|string|max:140',
     ]);
 
     $task = Task::createTask($data);
@@ -32,7 +32,7 @@ class TaskController extends Controller
   {
     // バリデーション
     $request->validate([
-      'content' => 'required|string|max:255',
+      'content' => 'required|string|max:140',
     ]);
 
     try {
