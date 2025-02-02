@@ -2,7 +2,7 @@
   <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <slot></slot>
-      <button @click="closeModal" class="modal-close">閉じる</button>
+      <!-- <button @click="closeModal" class="modal-close">閉じる</button> -->
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@ const closeModal = () => {
 .modal-overlay {
   position: fixed;
   inset: 0px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;

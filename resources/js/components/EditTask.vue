@@ -21,13 +21,20 @@
         </button>
         <button
           type="button"
-          @click="cancelEdit"
+          @click="exitEdit"
           class="text-gray-500 hover:underline ml-2"
         >
           キャンセル
         </button>
       </div>
     </form>
+    <!-- 削除ボタン -->
+    <button
+      @click="deleteTask(taskStore.selectedTask.index)"
+      class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
+    >
+      削除
+    </button>
   </div>
 </template>
 
@@ -63,11 +70,28 @@ const updateTask = async (index) => {
     console.error("タスク更新失敗:", error);
   }
 
-  cancelEdit(); // 編集終了
+  exitEdit(); // 編集終了
+};
+
+// タスク削除
+const deleteTask = async (index) => {
+  try {
+    const task = taskStore.tasks[index];// 対象タスクを取得
+    console.log(task.id);
+    // API呼び出し
+    await axios.delete(`/tasks/${task.id}`);
+
+    // ローカル状態から削除
+    taskStore.tasks = taskStore.tasks.filter((t) => t.id !== task.id);
+  } catch (error) {
+    console.error("タスク削除失敗:", error);
+  }
+
+  exitEdit(); // 編集終了
 };
 
 // 編集キャンセル
-const cancelEdit = () => {
+const exitEdit = () => {
   // モーダルを閉じる
   emit("close");
 };
