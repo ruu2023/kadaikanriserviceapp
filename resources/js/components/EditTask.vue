@@ -58,7 +58,7 @@ const updateTask = async (index) => {
     const task = taskStore.tasks[index]; // 対象タスクを取得
 
     // API 呼び出し
-    const response = await axios.put(`/tasks/${task.id}`, {
+    const response = await axios.put(`api/tasks/${task.id}`, {
       content: editedContent.value, // 更新する内容
     });
 
@@ -79,7 +79,7 @@ const deleteTask = async (index) => {
     const task = taskStore.tasks[index];// 対象タスクを取得
     console.log(task.id);
     // API呼び出し
-    await axios.delete(`/tasks/${task.id}`);
+    await axios.delete(`api/tasks/${task.id}`);
 
     // ローカル状態から削除
     taskStore.tasks = taskStore.tasks.filter((t) => t.id !== task.id);

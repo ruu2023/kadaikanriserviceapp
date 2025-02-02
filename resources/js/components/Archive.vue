@@ -86,7 +86,7 @@ const formatDate = (dateString) => dateString.split('T')[0];
 // 初回ロード時にタスクを取得
 const fetchTasks = async () => {
   try {
-    const response = await axios.get('/archives');
+    const response = await axios.get('api/archives');
     taskStore.tasks = response.data;
   } catch (error) {
     console.error('タスク一覧の取得に失敗しました:', error);
@@ -97,7 +97,7 @@ const fetchTasks = async () => {
 const submitTask = async () => {
   errorMessage.value = ""; // 送信前にリセット
   try {
-    const response = await axios.post('/tasks', {
+    const response = await axios.post('api/tasks', {
       content: inputContent.value,
     });
 
@@ -121,7 +121,7 @@ const updateTaskOrder = async () => {
   }));
 
   try {
-    await axios.post("/update-order", { tasks: updatedTasks });
+    await axios.post("api/update-order", { tasks: updatedTasks });
     console.log("Order updated successfully");
   } catch (error) {
     console.error("Error updating order:", error);

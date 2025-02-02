@@ -24,14 +24,14 @@ Route::post('login', [LoginController::class, 'login']);
 // ログアウトのルート
 Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
 
-// タスクのルート
-Route::resource('tasks', TaskController::class);
+// // タスクのルート
+// Route::resource('tasks', TaskController::class);
 
-// アーカイブのルート
-Route::get('archives', [TaskController::class, 'archive']);
+// // アーカイブのルート
+// Route::get('archives', [TaskController::class, 'archive']);
 
-// タスクの並び替えのルート
-Route::post('/update-order', [TaskController::class, 'updateOrder']);
+// // タスクの並び替えのルート
+// Route::post('/update-order', [TaskController::class, 'updateOrder']);
 
-// タスクの完了
-Route::post('/tasks/{task}/complete-task', [TaskController::class, 'completeTask']);
+// // タスクの完了
+// Route::post('/tasks/{task}/complete-task', [TaskController::class, 'completeTask']);
