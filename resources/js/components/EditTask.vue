@@ -4,9 +4,7 @@
     <!-- エラーメッセージ表示 -->
     <!-- <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> -->
     <!-- タスクの表示または編集 -->
-<!--
     <form
-      v-if="editIndex === index"
       @submit.prevent="updateTask(index)"
       class="flex items-center h-10 justify-between"
     >
@@ -30,18 +28,55 @@
         </button>
       </div>
     </form>
--->
   </div>
 </template>
 
 <script>
-import { reactive, onMounted, ref } from 'vue';
 import axios from 'axios';
 // import draggable from 'vuedraggable';
 
 export default {
   name: 'EditTask',
   setup() {
+
+    // 編集開始
+    const startEdit = (index, content) => {
+      editIndex.value = index;
+      editedContent.value = content;
+    };
+
+    // 更新
+    const updateTask = async(index) => {
+      try {
+        const task = state.tasks[index]; // 対象タスクを取得
+
+        // API呼び出し
+        const response = await axios.put(`/tasks/${task.id}`, {
+          content: editedContent.value, // 更新する内容
+        });
+
+        // ローカル状態の更新
+        state.tasks[index].content = response.data.content; // サーバーからの応答で更新
+
+        console.log("タスク更新成功:", response.data);
+      } catch (error) {
+        console.error("タスク更新失敗:", error);
+      }
+
+      cancelEdit(); // 編集終了
+    };
+
+    // 編集キャンセル
+    const cancelEdit = () => {
+      editIndex.value = null;
+      editedContent.value = "";
+    };
+
+    return {
+      startEdit,
+      updateTask,
+      cancelEdit
+    }
   },
 };
 </script>

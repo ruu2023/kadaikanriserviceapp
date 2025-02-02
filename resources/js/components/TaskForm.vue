@@ -15,7 +15,7 @@
         <li :key="element.id" class="task mt-2 bg-slate-200 shadow-lg list-none p-2">
           <!-- タスクの表示 -->
           <div
-          @click="focusTask(element.content)"
+          @click="focusTask(element.content, index)"
           class="flex items-center h-10 justify-between"
           >
             <div class="px-3 py-2 flex-1 flex justify-between">
@@ -79,42 +79,9 @@ export default {
     const errorMessage = ref(""); // エラーメッセージを格納
 
     // フォーカス（モーダル）を開く
-    const focusTask = (task) => {
+    const focusTask = (task, index) => {
       emit("task", task); // 親コンポーネントにイベントを送信
     }
-
-    // 編集開始
-    const startEdit = (index, content) => {
-      editIndex.value = index;
-      editedContent.value = content;
-    };
-
-    // 更新
-    const updateTask = async(index) => {
-      try {
-        const task = state.tasks[index]; // 対象タスクを取得
-
-        // API呼び出し
-        const response = await axios.put(`/tasks/${task.id}`, {
-          content: editedContent.value, // 更新する内容
-        });
-
-        // ローカル状態の更新
-        state.tasks[index].content = response.data.content; // サーバーからの応答で更新
-
-        console.log("タスク更新成功:", response.data);
-      } catch (error) {
-        console.error("タスク更新失敗:", error);
-      }
-
-      cancelEdit(); // 編集終了
-    };
-
-    // 編集キャンセル
-    const cancelEdit = () => {
-      editIndex.value = null;
-      editedContent.value = "";
-    };
 
     // 日付フォーマット用のメソッド
     const formatDate = (dateString) => {
@@ -201,9 +168,6 @@ export default {
       submitTask,
       formatDate,
       focusTask,
-      startEdit,
-      updateTask,
-      cancelEdit,
       deleteTask,
       onDragEnd,
     };

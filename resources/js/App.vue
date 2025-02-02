@@ -29,7 +29,7 @@
         </div>
         <header-component></header-component>
       </div>
-      <!-- タスクフォーム 切り替えあり -->
+      <!-- タスクフォーム 切り替え -->
       <div class="flex-1 overflow-y-auto">
         <component :is="currentTabComponent" @task="toggleModal"></component>
       </div>
@@ -90,8 +90,8 @@ export default {
     const isModalOpen = ref(false);
 
     // モーダルの表示を切り替え
-    const toggleModal = (taskContent) => {
-      selectedTask.value = taskContent;
+    const toggleModal = (task) => {
+      selectedTask.value = task;
       isModalOpen.value = !isModalOpen.value;
     };
 
