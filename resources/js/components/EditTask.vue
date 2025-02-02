@@ -44,8 +44,10 @@ const props = defineProps({
   task: Object, // 親から受け取る
 });
 
+// 親コンポーネントへイベントを渡す
+const emit = defineEmits(["close"]);
+
 // 編集中のインデックスと内容を管理
-const editIndex = ref(null);
 const editedContent = ref(props.task.content);
 
 // 更新
@@ -71,8 +73,8 @@ const updateTask = async (index) => {
 
 // 編集キャンセル
 const cancelEdit = () => {
-  editIndex.value = null;
-  editedContent.value = "";
+  // モーダルを閉じる
+  emit("close");
 };
 </script>
 <style>

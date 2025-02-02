@@ -15,7 +15,7 @@
 
     <!-- モーダル -->
     <modal-component :isOpen="isModalOpen" @close="toggleModal">
-      <edit-task :task="selectedTask"></edit-task>
+      <edit-task :task="selectedTask" @close="toggleModal"></edit-task>
     </modal-component>
 
     <!-- メインコンテンツ -->
