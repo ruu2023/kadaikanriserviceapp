@@ -79,8 +79,9 @@ export default {
     const errorMessage = ref(""); // エラーメッセージを格納
 
     // フォーカス（モーダル）を開く
-    const focusTask = (task, index) => {
-      emit("task", task); // 親コンポーネントにイベントを送信
+    const focusTask = (content, index) => {
+      emit("task-selected"); // 親コンポーネントにイベントを送信
+      emit("task", {content, index}); // 親コンポーネントにイベントを送信
     }
 
     // 日付フォーマット用のメソッド

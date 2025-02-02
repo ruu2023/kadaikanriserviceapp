@@ -15,8 +15,7 @@
 
     <!-- モーダル -->
     <modal-component :isOpen="isModalOpen" @close="toggleModal">
-      <p>{{ selectedTask }}</p>
-      <edit-task></edit-task>
+      <edit-task :task="selectedTask"></edit-task>
     </modal-component>
 
     <!-- メインコンテンツ -->
@@ -31,7 +30,7 @@
       </div>
       <!-- タスクフォーム 切り替え -->
       <div class="flex-1 overflow-y-auto">
-        <component :is="currentTabComponent" @task="toggleModal"></component>
+        <component :is="currentTabComponent" @task-selected="toggleModal" @task="handleTask"></component>
       </div>
       <!-- フッター -->
       <div>
@@ -90,10 +89,14 @@ export default {
     const isModalOpen = ref(false);
 
     // モーダルの表示を切り替え
-    const toggleModal = (task) => {
-      selectedTask.value = task;
+    const toggleModal = () => {
       isModalOpen.value = !isModalOpen.value;
     };
+
+    // 選択されたタスクを設定
+    const handleTask = (task) => {
+      selectedTask.value = task;
+    }
 
     return {
       isSidebarOpen,
@@ -101,9 +104,10 @@ export default {
       currentTabComponent,
       toggleSidebar,
       updateTab,
+      selectedTask,
       isModalOpen,
       toggleModal,
-      selectedTask
+      handleTask
     };
   },
 }
