@@ -4,7 +4,7 @@
     <!-- タスク一覧 -->
     <div class="flex-1 scrollable p-8">
       <draggable
-      v-model="state.tasks"
+      v-model="taskStore.tasks"
       @end="onDragEnd"
       animation="200"
       itemKey="id"
@@ -60,17 +60,17 @@
 
 <script setup>
 import { reactive, onMounted, ref } from 'vue';
+import { useTaskStore } from '@/stores/taskStore';
+
 import axios from 'axios';
 import draggable from 'vuedraggable';
 
 // タスクの状態管理
+const taskStore = useTaskStore();
 const state = reactive({
   content: '', // フォームの入力値
-  tasks: [],   // タスク一覧
 });
 
-const editIndex = ref(null);       // 編集中のインデックス
-const editedContent = ref("");     // 編集中の内容
 const errorMessage = ref("");      // エラーメッセージ
 
 const emit = defineEmits(["task-selected", "task"]);
@@ -88,7 +88,7 @@ const formatDate = (dateString) => dateString.split('T')[0];
 const fetchTasks = async () => {
   try {
     const response = await axios.get('/tasks');
-    state.tasks = response.data;
+    taskStore.tasks = response.data;
   } catch (error) {
     console.error('タスク一覧の取得に失敗しました:', error);
   }
@@ -103,7 +103,7 @@ const submitTask = async () => {
     });
 
     const newTask = response.data;
-    state.tasks.unshift(newTask); // 先頭に追加
+    taskStore.tasks.unshift(newTask); // 先頭に追加
 
     await updateTaskOrder(); // 並び順のAPIリクエスト
 
@@ -116,7 +116,7 @@ const submitTask = async () => {
 
 // タスク並び替え
 const updateTaskOrder = async () => {
-  const updatedTasks = state.tasks.map((task, index) => ({
+  const updatedTasks = taskStore.tasks.map((task, index) => ({
     ...task,
     row_order: index + 1,
   }));
@@ -138,7 +138,7 @@ const onDragEnd = async () => {
 const deleteTask = async (id) => {
   try {
     await axios.delete(`/tasks/${id}`);
-    state.tasks = state.tasks.filter((task) => task.id !== id);
+    taskStore.tasks = taskStore.tasks.filter((task) => task.id !== id);
   } catch (error) {
     console.error("タスク削除失敗:", error);
   }
