@@ -40,8 +40,8 @@
   </div>
 </template>
 
-<script>
-import { ref, computed } from "vue";
+<script setup>
+import { ref, computed } from 'vue';
 import TaskForm from './components/TaskForm.vue';
 import Archive from './components/Archive.vue';
 import HeaderComponent from './components/Header.vue';
@@ -50,58 +50,34 @@ import SideBarComponent from './components/SideBar.vue';
 import ModalComponent from './components/Modal.vue';
 import EditTask from './components/EditTask.vue';
 
-export default {
-  components: {
-    TaskForm,
-    Archive,
-    HeaderComponent,
-    FooterComponent,
-    SideBarComponent,
-    ModalComponent,
-    EditTask
-  },
-  setup() {
-    // サイドバーの開閉状態
-    const isSidebarOpen = ref(false);
+// サイドバーの開閉状態
+const isSidebarOpen = ref(false);
 
-    // 現在のタブ
-    const currentTab = ref("TaskForm");
+// 現在のタブ
+const currentTab = ref("TaskForm");
 
-    // 表示するコンポーネントを計算
-    const currentTabComponent = computed(() => {
-      return currentTab.value === "Archive" ? "Archive" : "TaskForm";
-    });
+// 表示するコンポーネントを計算
+const currentTabComponent = computed(() => {
+  return currentTab.value === "Archive" ? Archive : TaskForm;
+});
 
-    // サイドバーの開閉を切り替え
-    const toggleSidebar = () => {
-      isSidebarOpen.value = !isSidebarOpen.value;
-    };
+// サイドバーの開閉を切り替え
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value;
+};
 
-    // タブの変更
-    const updateTab = (tab) => {
-      currentTab.value = tab;
-    };
+// タブの変更
+const updateTab = (tab) => {
+  currentTab.value = tab;
+};
 
-    // モーダルの表示状態
-    const isModalOpen = ref(false);
+// モーダルの表示状態
+const isModalOpen = ref(false);
 
-    // モーダルの表示を切り替え
-    const toggleModal = () => {
-      isModalOpen.value = !isModalOpen.value;
-    };
-
-
-    return {
-      isSidebarOpen,
-      currentTab,
-      currentTabComponent,
-      toggleSidebar,
-      updateTab,
-      isModalOpen,
-      toggleModal,
-    };
-  },
-}
+// モーダルの表示を切り替え
+const toggleModal = () => {
+  isModalOpen.value = !isModalOpen.value;
+};
 </script>
 
 <style scoped>
