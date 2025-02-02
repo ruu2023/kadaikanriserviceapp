@@ -12,55 +12,15 @@
       chosen-class="chosen"
       >
         <template #item="{ element, index }">
-        <li :key="element.id" class="mt-2 bg-slate-200 shadow-lg list-none p-2">
-          <!-- タスクの表示または編集 -->
-          <form
-            v-if="editIndex === index"
-            @submit.prevent="updateTask(index)"
-            class="flex items-center h-10 justify-between"
-          >
-            <input
-              v-model="editedContent"
-              class="block flex-1 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-            <div>
-              <button
-                type="submit"
-                class="text-green-500 hover:underline ml-2"
-              >
-                更新
-              </button>
-              <button
-                type="button"
-                @click="cancelEdit"
-                class="text-gray-500 hover:underline ml-2"
-              >
-                キャンセル
-              </button>
-            </div>
-          </form>
+        <li :key="element.id" class="task mt-2 bg-slate-200 shadow-lg list-none p-2">
+          <!-- タスクの表示 -->
           <div
-          v-else
+          @click="startEdit(index, element.content)"
           class="flex items-center h-10 justify-between"
           >
             <div class="px-3 py-2 flex-1 flex justify-between">
               <!-- TODO:hiddenを修正 -->
               <p class="line-clamp-2 break-all w-full">{{ element.content }}</p> <p class="hidden">{{ formatDate(element.created_at) }}</p>
-            </div>
-            <div>
-              <button
-                @click="startEdit(index, element.content)"
-                class="text-blue-500 hover:underline ml-2"
-              >
-                編集
-              </button>
-              <!-- TODO:hiddenを修正 -->
-              <button
-                @click="deleteTask(element.id)"
-                class="text-red-500 hover:underline ml-2 hidden"
-              >
-                削除
-              </button>
             </div>
           </div>
         </li>
@@ -72,7 +32,6 @@
     <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
 
     <form @submit.prevent="submitTask" class="flex items-center w-full space-x-2 my-4 p-2">
-
       <!-- タスク名 -->
       <div class="flex-1">
         <input
@@ -123,6 +82,7 @@ export default {
     const startEdit = (index, content) => {
       editIndex.value = index;
       editedContent.value = content;
+      console.log(content);
     };
 
     // 更新
@@ -257,5 +217,9 @@ export default {
 /* スクロールバーの非表示 */
 .scrollable::-webkit-scrollbar {
   display: none;
+}
+/* タスク単体 */
+.task {
+  cursor: pointer;
 }
 </style>

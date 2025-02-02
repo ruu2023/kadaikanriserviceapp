@@ -23,7 +23,7 @@
         </div>
         <header-component></header-component>
       </div>
-      <!-- タスクフォーム -->
+      <!-- タスクフォーム 切り替えあり -->
       <div class="flex-1 overflow-y-auto">
         <component :is="currentTabComponent"></component>
       </div>
@@ -32,7 +32,7 @@
         <footer-component></footer-component>
       </div>
     </div>
-  </div><!-- /.flex -->
+  </div>
 </template>
 
 <script>
@@ -41,6 +41,7 @@ import Archive from './components/Archive.vue';
 import HeaderComponent from './components/Header.vue';
 import FooterComponent from './components/Footer.vue';
 import SideBarComponent from './components/SideBar.vue';
+import Modal from './components/Modal.vue';
 
 export default {
   components: {
@@ -49,6 +50,7 @@ export default {
     HeaderComponent,
     FooterComponent,
     SideBarComponent,
+    Modal,
   },
   data() {
     return {

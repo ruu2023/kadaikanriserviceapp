@@ -22,6 +22,7 @@ class TaskController extends Controller
     $data = $request->validate([
       'content' => 'required|string|max:140',
     ]);
+    $data['content'] = strip_tags($data['content']); // XSS 対策 空が登録されても可
 
     $task = Task::createTask($data);
 
