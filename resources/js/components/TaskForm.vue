@@ -77,7 +77,8 @@ const emit = defineEmits(["task-selected", "task"]);
 // フォーカス（モーダル）を開く
 const focusTask = (content, index) => {
   emit("task-selected");
-  emit("task", { content, index });
+  // emit("task", { content, index });
+  taskStore.selectedTask = {content, index};
 };
 
 // 日付フォーマット

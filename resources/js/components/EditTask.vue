@@ -3,9 +3,9 @@
     <!-- エラーメッセージ表示 -->
     <!-- <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> -->
     <!-- タスクの表示または編集 -->
-    {{ props.task.content }}
+    {{ taskStore.selectedTask.content }}
     <form
-      @submit.prevent="updateTask(props.task.index)"
+      @submit.prevent="updateTask(taskStore.selectedTask.index)"
       class="flex items-center h-10 justify-between"
     >
       <input
@@ -48,7 +48,7 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 // 編集中のインデックスと内容を管理
-const editedContent = ref(props.task.content);
+const editedContent = ref(taskStore.selectedTask.content);
 
 // 更新
 const updateTask = async (index) => {
