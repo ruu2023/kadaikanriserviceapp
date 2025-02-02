@@ -58,123 +58,96 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, onMounted, ref } from 'vue';
 import axios from 'axios';
 import draggable from 'vuedraggable';
 
-export default {
-  name: 'TaskForm',
-  components: {
-    draggable
-  },
-  setup(_, { emit }) {
-    const state = reactive({
-      content: '', // フォームの入力値
-      tasks: [], // タスク一覧
+// タスクの状態管理
+const state = reactive({
+  content: '', // フォームの入力値
+  tasks: [],   // タスク一覧
+});
+
+const editIndex = ref(null);       // 編集中のインデックス
+const editedContent = ref("");     // 編集中の内容
+const errorMessage = ref("");      // エラーメッセージ
+
+const emit = defineEmits(["task-selected", "task"]);
+
+// フォーカス（モーダル）を開く
+const focusTask = (content, index) => {
+  emit("task-selected");
+  emit("task", { content, index });
+};
+
+// 日付フォーマット
+const formatDate = (dateString) => dateString.split('T')[0];
+
+// 初回ロード時にタスクを取得
+const fetchTasks = async () => {
+  try {
+    const response = await axios.get('/tasks');
+    state.tasks = response.data;
+  } catch (error) {
+    console.error('タスク一覧の取得に失敗しました:', error);
+  }
+};
+
+// フォーム送信時に新しいタスクを追加
+const submitTask = async () => {
+  errorMessage.value = ""; // 送信前にリセット
+  try {
+    const response = await axios.post('/tasks', {
+      content: state.content,
     });
 
-    const editIndex = ref(null); // 編集中のインデックス
-    const editedContent = ref(""); // 編集中の内容
-    const errorMessage = ref(""); // エラーメッセージを格納
+    const newTask = response.data;
+    state.tasks.unshift(newTask); // 先頭に追加
 
-    // フォーカス（モーダル）を開く
-    const focusTask = (content, index) => {
-      emit("task-selected"); // 親コンポーネントにイベントを送信
-      emit("task", {content, index}); // 親コンポーネントにイベントを送信
-    }
+    await updateTaskOrder(); // 並び順のAPIリクエスト
 
-    // 日付フォーマット用のメソッド
-    const formatDate = (dateString) => {
-      return dateString.split('T')[0];
-    };
-
-    // 初回ロード時に既存のタスクを取得
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get('/tasks'); // APIからタスク一覧を取得
-        state.tasks = response.data;
-      } catch (error) {
-        console.error('タスク一覧の取得に失敗しました:', error);
-      }
-    };
-
-    // フォーム送信時に新しいタスクを追加
-    const submitTask = async () => {
-      errorMessage.value = ""; // 送信前にリセット
-      try {
-        const response = await axios.post('/tasks', {
-          content: state.content,
-        });
-
-        const newTask = response.data; // サーバーから返ってきたタスクを取得
-        state.tasks.unshift(newTask); // タスク一覧に追加
-
-        // 並び順のAPIリクエストを送信
-        await updateTaskOrder();
-
-        state.content = ''; // 入力フィールドをリセット
-      } catch (error) {
-        console.error('エラーが発生しました:', error.response.data.message);
-        if (error.response && error.response.data.message) {
-          errorMessage.value = error.response.data.message; // エラー内容をセット
-        } else {
-          errorMessage.value = "不明なエラーが発生しました";
-        }
-      }
-    };
-
-    // タスク並び替え
-    const updateTaskOrder = async () => {
-      const updatedTasks = state.tasks.map((task, index) => ({
-        ...task,
-        row_order: index + 1,
-      }));
-
-      try {
-        await axios.post("/update-order", {
-          tasks: updatedTasks,
-        });
-        console.log("Order updated successfully");
-      } catch (error) {
-        console.error("Error updating order:", error);
-      }
-    };
-
-    // ドラッグ時にタスクの並び替え
-    const onDragEnd = async () => {
-      await updateTaskOrder();
-    };
-
-    // タスク削除
-    const deleteTask = async (id) => {
-      try {
-        // API呼び出し
-        await axios.delete(`/tasks/${id}`);
-
-        // ローカル状態から削除
-        state.tasks = state.tasks.filter((task) => task.id !== id);
-      } catch (error) {
-        console.error("タスク削除失敗:", error);
-      }
-    };
-
-    onMounted(fetchTasks); // コンポーネントのマウント時にタスク一覧を取得
-
-    return {
-      state,
-      editIndex,
-      editedContent,
-      errorMessage,
-      submitTask,
-      formatDate,
-      focusTask,
-      deleteTask,
-      onDragEnd,
-    };
-  },
+    state.content = ''; // 入力リセット
+  } catch (error) {
+    console.error('エラーが発生しました:', error.response?.data?.message || error);
+    errorMessage.value = error.response?.data?.message || "不明なエラーが発生しました";
+  }
 };
+
+// タスク並び替え
+const updateTaskOrder = async () => {
+  const updatedTasks = state.tasks.map((task, index) => ({
+    ...task,
+    row_order: index + 1,
+  }));
+
+  try {
+    await axios.post("/update-order", { tasks: updatedTasks });
+    console.log("Order updated successfully");
+  } catch (error) {
+    console.error("Error updating order:", error);
+  }
+};
+
+// ドラッグ時の並び替え処理
+const onDragEnd = async () => {
+  await updateTaskOrder();
+};
+
+// タスク削除
+const deleteTask = async (id) => {
+  try {
+    await axios.delete(`/tasks/${id}`);
+    state.tasks = state.tasks.filter((task) => task.id !== id);
+  } catch (error) {
+    console.error("タスク削除失敗:", error);
+  }
+};
+
+// コンポーネントマウント時にタスク取得
+onMounted(fetchTasks);
 </script>
+
 <style>
 /* ドラッグ中の要素 */
 .dragging {
