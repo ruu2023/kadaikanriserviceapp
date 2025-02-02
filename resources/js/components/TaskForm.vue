@@ -72,12 +72,11 @@ const inputContent = ref(''); // 入力フォーム
 const errorMessage = ref(''); // エラーメッセージ
 
 // 親コンポーネントへイベントを渡す
-const emit = defineEmits(["task-selected", "task"]);
+const emit = defineEmits(["task-selected"]);
 
 // フォーカス（モーダル）を開く
 const focusTask = (content, index) => {
   emit("task-selected");
-  // emit("task", { content, index });
   taskStore.selectedTask = {content, index};
 };
 

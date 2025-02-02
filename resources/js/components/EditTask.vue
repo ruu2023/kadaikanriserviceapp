@@ -39,11 +39,6 @@ import axios from "axios";
 // タスクの状態管理
 const taskStore = useTaskStore();
 
-// 親コンポーネントから `task` を受け取る
-const props = defineProps({
-  task: Object, // 親から受け取る
-});
-
 // 親コンポーネントへイベントを渡す
 const emit = defineEmits(["close"]);
 
