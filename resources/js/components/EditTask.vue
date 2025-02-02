@@ -4,11 +4,11 @@
     <!-- <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> -->
     <!-- タスクの表示または編集 -->
     <form
-      @submit.prevent="updateTask(task.index)"
+      @submit.prevent="updateTask(props.task.index)"
       class="flex items-center h-10 justify-between"
     >
       <input
-        v-model="task.content"
+        v-model="editedContent"
         class="block flex-1 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
       />
       <div>
@@ -32,7 +32,10 @@
 
 <script setup>
 import { ref } from "vue";
+import { useTaskStore } from '@/stores/taskStore';
 import axios from "axios";
+
+const taskStore = useTaskStore();
 
 // 編集中のインデックスと内容を管理
 const editIndex = ref(null);
@@ -46,7 +49,7 @@ const props = defineProps({
 // 更新
 const updateTask = async (index) => {
   try {
-    const task = props.tasks[index]; // 対象タスクを取得
+    const task = taskStore.tasks[index]; // 対象タスクを取得
 
     // API 呼び出し
     const response = await axios.put(`/tasks/${task.id}`, {
@@ -54,7 +57,7 @@ const updateTask = async (index) => {
     });
 
     // ローカル状態の更新
-    props.tasks[index].content = response.data.content; // サーバーからの応答で更新
+    taskStore.tasks[index].content = response.data.content; // サーバーからの応答で更新
 
     console.log("タスク更新成功:", response.data);
   } catch (error) {
