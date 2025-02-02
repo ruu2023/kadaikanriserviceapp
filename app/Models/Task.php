@@ -14,7 +14,7 @@ class Task extends Model
 
   public static function createTask(array $data)
   {
-    $rowOrder = self::max('row_order') + 1;
+    $rowOrder = self::min('row_order') - 1;
     return self::create([
       'content' => $data['content'],
       'user_id' => Auth::id(),

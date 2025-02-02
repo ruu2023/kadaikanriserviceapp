@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Archive;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -82,5 +83,30 @@ class TaskController extends Controller
       // エラー時のレスポンス
       return response()->json(['message' => 'Error updating order', 'error' => $e->getMessage()], 500);
     }
+  }
+
+  public function completeTask(Task $task)
+  {
+    try {
+      $data['content'] = $task->content;
+      Archive::createArchive($data);
+
+      // 元のタスクを削除
+      $task->delete();
+
+      return response()->json([
+        'message' => 'Task archived successfully'
+      ], 200);
+    } catch (\Exception $e) {
+      return response()->json([
+        'message' => 'Failed to archive task',
+        'error' => $e->getMessage()
+      ], 500);
+    }
+  }
+  public function archive()
+  {
+    $archives = Archive::orderBy('row_order', 'asc')->get();
+    return response()->json($archives);
   }
 }

@@ -137,8 +137,14 @@ const onDragEnd = async () => {
 };
 
 //タスクの完了
-const handleDone = () => {
-  console.log("done");
+const handleDone = async (id) => {
+  try {
+    await axios.post(`/tasks/${id}/complete-task`);
+    // ローカルのリストから削除
+    taskStore.tasks = taskStore.tasks.filter(task => task.id !== id);
+  } catch (error) {
+    console.error("タスクのアーカイブに失敗しました:", error);
+  }
 }
 
 // コンポーネントマウント時にタスク取得
