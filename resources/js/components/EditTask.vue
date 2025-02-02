@@ -3,6 +3,7 @@
     <!-- エラーメッセージ表示 -->
     <!-- <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> -->
     <!-- タスクの表示または編集 -->
+    {{ props.task.content }}
     <form
       @submit.prevent="updateTask(props.task.index)"
       class="flex items-center h-10 justify-between"
@@ -35,16 +36,17 @@ import { ref } from "vue";
 import { useTaskStore } from '@/stores/taskStore';
 import axios from "axios";
 
+// タスクの状態管理
 const taskStore = useTaskStore();
-
-// 編集中のインデックスと内容を管理
-const editIndex = ref(null);
-const editedContent = ref("");
 
 // 親コンポーネントから `task` を受け取る
 const props = defineProps({
   task: Object, // 親から受け取る
 });
+
+// 編集中のインデックスと内容を管理
+const editIndex = ref(null);
+const editedContent = ref(props.task.content);
 
 // 更新
 const updateTask = async (index) => {
