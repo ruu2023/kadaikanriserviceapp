@@ -14,9 +14,10 @@
     <div v-if="isSidebarOpen" class="fixed md:hidden inset-0 bg-black bg-opacity-50 z-40" @click="toggleSidebar"></div>
 
     <!-- モーダル -->
-    <Modal :isOpen="isModalOpen" @close="toggleModal">
+    <modal-component :isOpen="isModalOpen" @close="toggleModal">
       <p>{{ selectedTask }}</p>
-    </Modal>
+      <edit-task></edit-task>
+    </modal-component>
 
     <!-- メインコンテンツ -->
     <div class="flex flex-1 flex-col h-full">
@@ -47,7 +48,8 @@ import Archive from './components/Archive.vue';
 import HeaderComponent from './components/Header.vue';
 import FooterComponent from './components/Footer.vue';
 import SideBarComponent from './components/SideBar.vue';
-import Modal from './components/Modal.vue';
+import ModalComponent from './components/Modal.vue';
+import EditTask from './components/EditTask.vue';
 
 export default {
   components: {
@@ -56,7 +58,8 @@ export default {
     HeaderComponent,
     FooterComponent,
     SideBarComponent,
-    Modal,
+    ModalComponent,
+    EditTask
   },
   setup() {
     // サイドバーの開閉状態
