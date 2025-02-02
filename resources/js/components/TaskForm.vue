@@ -15,7 +15,7 @@
         <li :key="element.id" class="task mt-2 bg-slate-200 shadow-lg list-none p-2">
           <!-- タスクの表示 -->
           <div
-          @click="startEdit(index, element.content)"
+          @click="focusTask(element.content)"
           class="flex items-center h-10 justify-between"
           >
             <div class="px-3 py-2 flex-1 flex justify-between">
@@ -68,7 +68,7 @@ export default {
   components: {
     draggable
   },
-  setup() {
+  setup(_, { emit }) {
     const state = reactive({
       content: '', // フォームの入力値
       tasks: [], // タスク一覧
@@ -78,11 +78,15 @@ export default {
     const editedContent = ref(""); // 編集中の内容
     const errorMessage = ref(""); // エラーメッセージを格納
 
+    // フォーカス（モーダル）を開く
+    const focusTask = (task) => {
+      emit("task", task); // 親コンポーネントにイベントを送信
+    }
+
     // 編集開始
     const startEdit = (index, content) => {
       editIndex.value = index;
       editedContent.value = content;
-      console.log(content);
     };
 
     // 更新
@@ -196,6 +200,7 @@ export default {
       errorMessage,
       submitTask,
       formatDate,
+      focusTask,
       startEdit,
       updateTask,
       cancelEdit,

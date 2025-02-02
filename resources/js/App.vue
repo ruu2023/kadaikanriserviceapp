@@ -14,9 +14,8 @@
     <div v-if="isSidebarOpen" class="fixed md:hidden inset-0 bg-black bg-opacity-50 z-40" @click="toggleSidebar"></div>
 
     <!-- モーダル -->
-    <button @click="toggleModal">モーダルを開く</button>
     <Modal :isOpen="isModalOpen" @close="toggleModal">
-      <p>モーダルの中身です</p>
+      <p>{{ selectedTask }}</p>
     </Modal>
 
     <!-- メインコンテンツ -->
@@ -31,7 +30,7 @@
       </div>
       <!-- タスクフォーム 切り替えあり -->
       <div class="flex-1 overflow-y-auto">
-        <component :is="currentTabComponent"></component>
+        <component :is="currentTabComponent" @task="toggleModal"></component>
       </div>
       <!-- フッター -->
       <div>
@@ -81,11 +80,15 @@ export default {
       currentTab.value = tab;
     };
 
+    // モーダルに表示する内容
+    const selectedTask = ref(null);
+
     // モーダルの表示状態
     const isModalOpen = ref(false);
 
     // モーダルの表示を切り替え
-    const toggleModal = () => {
+    const toggleModal = (taskContent) => {
+      selectedTask.value = taskContent;
       isModalOpen.value = !isModalOpen.value;
     };
 
@@ -96,7 +99,8 @@ export default {
       toggleSidebar,
       updateTab,
       isModalOpen,
-      toggleModal
+      toggleModal,
+      selectedTask
     };
   },
 }
