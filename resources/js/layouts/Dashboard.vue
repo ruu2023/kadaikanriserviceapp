@@ -1,4 +1,5 @@
 <template>
+
   <div class="flex h-screen">
     <!-- サイドバー -->
     <div
@@ -42,13 +43,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import TaskForm from './components/TaskForm.vue';
-import Archive from './components/Archive.vue';
-import HeaderComponent from './components/Header.vue';
-import FooterComponent from './components/Footer.vue';
-import SideBarComponent from './components/SideBar.vue';
-import ModalComponent from './components/Modal.vue';
-import EditTask from './components/EditTask.vue';
+import TaskForm from '../components/TaskForm.vue';
+import Archive from '../components/Archive.vue';
+import HeaderComponent from '../components/Header.vue';
+import FooterComponent from '../components/Footer.vue';
+import SideBarComponent from '../components/SideBar.vue';
+import ModalComponent from '../components/Modal.vue';
+import EditTask from '../components/EditTask.vue';
 
 // サイドバーの開閉状態
 const isSidebarOpen = ref(false);
