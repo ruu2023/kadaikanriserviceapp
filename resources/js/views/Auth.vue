@@ -25,78 +25,64 @@
   </div>
 </template>
 
-<script>
-import api, { setAuthToken } from "../plugins/axios";
+<script setup>
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "vue-router";
+import api from "../plugins/axios";
 
-export default {
-  data() {
-    return {
-      registerData: {
-        name: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-      },
-      loginData: {
-        email: "",
-        password: "",
-      },
-      dashboardMessage: "",
-    };
-  },
-  methods: {
-  // ユーザー登録
-  async register() {
-    try {
-      const response = await api.post("/register", this.registerData, {
-        withCredentials: true, // これを追加
-      });
-      alert("登録成功: " + response.data.message);
-      setAuthToken(response.data.token); // トークンを設定
-      this.$router.push("/dashboard"); // ダッシュボードにリダイレクト
-    } catch (error) {
-      console.error("登録エラー", error.response?.data);
-      alert("登録エラー: " + JSON.stringify(error.response?.data));
-    }
-  },
+const authStore = useAuthStore();
+const router = useRouter();
 
-  // ログイン
-  async login() {
-    try {
-      const response = await api.post("/login", this.loginData, {
-        withCredentials: true, // これを追加
-      });
-      alert("ログイン成功: " + response.data.message);
-      console.log("Router:", this.$router); // ← ここで `this.$router` の状態を確認
-      setAuthToken(response.data.token);
-      this.$router.push("/dashboard"); // ダッシュボードにリダイレクト
-    } catch (error) {
-      alert("ログインエラー: " + (error.response?.data?.message || "不明なエラー"));
-    }
-  },
+const registerData = ref({
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+});
 
-  // ログアウト
-  async logout() {
-    try {
-      await api.post("/logout", {}, { withCredentials: true });
-      localStorage.removeItem("token");
-      this.$router.push("/login");
-    } catch (error) {
-      console.error("ログアウト失敗", error);
-    }
-  },
+const loginData = ref({
+  email: "",
+  password: "",
+});
 
-  // 認証が必要なエンドポイント
-  async getDashboard() {
-    try {
-      const response = await api.get("/dashboard", { withCredentials: true });
-      this.dashboardMessage = response.data.message;
-    } catch (error) {
-      alert("ダッシュボード取得エラー: " + (error.response?.data?.message || "不明なエラー"));
-    }
-  },
-},
+const dashboardMessage = ref("");
 
+// ユーザー登録
+const register = async () => {
+  try {
+    await authStore.register(registerData.value);
+    router.push("/dashboard");
+  } catch (error) {
+    console.error("登録エラー", error);
+    alert("登録エラー: " + error.message);
+  }
+};
+
+// ログイン
+const login = async () => {
+  try {
+    await authStore.login(loginData.value);
+    router.push("/dashboard");
+  } catch (error) {
+    console.error("ログインエラー", error);
+    alert("ログインエラー: " + error.message);
+  }
+};
+
+// ログアウト
+const logout = async () => {
+  await authStore.logout();
+};
+
+// ダッシュボード情報取得
+const getDashboard = async () => {
+  try {
+    const response = await api.get("/dashboard", { withCredentials: true });
+    dashboardMessage.value = response.data.message;
+  } catch (error) {
+    alert("ダッシュボード取得エラー: " + (error.response?.data?.message || "不明なエラー"));
+  }
 };
 </script>
 
