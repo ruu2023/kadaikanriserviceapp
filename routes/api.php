@@ -18,6 +18,10 @@ Route::post('/tokens/create', function (Request $request) {
   return ['token' => $token->plainTextToken];
 });
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+  return response()->json($request->user());
+});
+
 Route::middleware("auth:sanctum")->get("dashboard", function (Request $request) {
   return response()->json(["message" => "Welcome to your dashboard, " . $request->user()->name]);
 });
