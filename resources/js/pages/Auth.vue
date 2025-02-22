@@ -27,12 +27,10 @@
 
 <script setup>
 import { ref } from "vue";
-import { useAuthStore } from "@/stores/authStore";
-import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/authStore";
 import api from "../plugins/axios";
 
 const authStore = useAuthStore();
-const router = useRouter();
 
 const registerData = ref({
   name: "",
@@ -52,7 +50,6 @@ const dashboardMessage = ref("");
 const register = async () => {
   try {
     await authStore.register(registerData.value);
-    router.push("/dashboard");
   } catch (error) {
     console.error("登録エラー", error);
     alert("登録エラー: " + error.message);
@@ -63,7 +60,6 @@ const register = async () => {
 const login = async () => {
   try {
     await authStore.login(loginData.value);
-    router.push("/dashboard");
   } catch (error) {
     console.error("ログインエラー", error);
     alert("ログインエラー: " + error.message);
@@ -86,7 +82,7 @@ const getDashboard = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 .auth-container {
   max-width: 400px;
   margin: auto;

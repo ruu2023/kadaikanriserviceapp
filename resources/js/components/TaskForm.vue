@@ -64,12 +64,17 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useTaskStore } from '@/stores/taskStore';
+import { useAuthStore } from "@/stores/authStore";
 
 import axios from 'axios';
 import draggable from 'vuedraggable';
 
 // タスクの状態管理
 const taskStore = useTaskStore();
+
+// ユーザー情報
+const authStore = useAuthStore();
+console.log("userID:" + authStore.user.id);
 
 const inputContent = ref(''); // 入力フォーム
 const errorMessage = ref(''); // エラーメッセージ

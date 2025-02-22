@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Archive;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -25,8 +27,9 @@ class TaskController extends Controller
     ]);
     $data['content'] = strip_tags($data['content']); // XSS 対策 空が登録されても可
 
+    // $data['user_id'] = Auth::id(); // 現在ログインしているユーザーの ID を取得
+    return Auth::id();
     $task = Task::createTask($data);
-
     // 作成したタスクをJSON形式で返す
     return response()->json($task);
   }
@@ -89,6 +92,7 @@ class TaskController extends Controller
   {
     try {
       $data['content'] = $task->content;
+      $data['user_id'] = Auth::id();
       Archive::createArchive($data);
 
       // 元のタスクを削除

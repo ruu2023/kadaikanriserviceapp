@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AuthView from "../views/Auth.vue"; // `@/` が使えない場合に備えて相対パス
-import DashboardView from "../layouts/Dashboard.vue";
+import AuthView from "../pages/Auth.vue"; // `@/` が使えない場合に備えて相対パス
+import DashboardView from "../pages/Dashboard.vue";
 import { useAuthStore } from "../stores/authStore"; // Pinia のストアをインポート
 import { storeToRefs } from "pinia";
 

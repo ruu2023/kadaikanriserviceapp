@@ -17,7 +17,7 @@ class Archive extends Model
     $rowOrder = self::max('row_order') + 1;
     return self::create([
       'content' => $data['content'],
-      'user_id' => Auth::id(),
+      'user_id' => $data['user_id'],
       'row_order' => $rowOrder,
     ]);
   }

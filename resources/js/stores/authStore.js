@@ -7,23 +7,18 @@ export const useAuthStore = defineStore("auth", () => {
     const user = ref(null);
     const token = ref(localStorage.getItem("auth_token") || null);
     const router = useRouter();
-    console.log("useAuthStore's token", token);
-    // ユーザー情報を取得
+
     const fetchUser = async () => {
-        if (!token.value) {
-            user.value = null;
-            return;
-        }
+        if (!token.value) return;
         try {
             const response = await api.get("/user", {
                 headers: { Authorization: `Bearer ${token.value}` },
-                withCredentials: true,
             });
+            console.log(response.data);
             user.value = response.data;
-            console.log("response", response.data);
         } catch (error) {
-            console.error("ユーザー情報の取得に失敗しました", error);
-            logout(); // 失敗時はログアウト処理
+            console.error("ユーザー情報取得エラー:", error);
+            logout();
         }
     };
 
@@ -35,7 +30,6 @@ export const useAuthStore = defineStore("auth", () => {
             });
             alert("登録成功: " + response.data.message);
             setAuthToken(response.data.token);
-            await fetchUser();
             router.push("/dashboard");
         } catch (error) {
             console.error("登録エラー", error.response?.data);
@@ -50,8 +44,8 @@ export const useAuthStore = defineStore("auth", () => {
                 withCredentials: true,
             });
             alert("ログイン成功: " + response.data.message);
+            user.value = response.data.user;
             setAuthToken(response.data.token);
-            await fetchUser();
             router.push("/dashboard");
         } catch (error) {
             alert(
