@@ -16,12 +16,6 @@
       <input type="password" v-model="loginData.password" placeholder="パスワード" required />
       <button type="submit">ログイン</button>
     </form>
-
-    <button @click="logout">ログアウト</button>
-
-    <h2>ダッシュボード</h2>
-    <button @click="getDashboard">ダッシュボード情報取得</button>
-    <p v-if="dashboardMessage">{{ dashboardMessage }}</p>
   </div>
 </template>
 

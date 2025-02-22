@@ -14,7 +14,6 @@ export const useAuthStore = defineStore("auth", () => {
             const response = await api.get("/user", {
                 headers: { Authorization: `Bearer ${token.value}` },
             });
-            console.log(response.data);
             user.value = response.data;
         } catch (error) {
             console.error("ユーザー情報取得エラー:", error);
@@ -43,7 +42,7 @@ export const useAuthStore = defineStore("auth", () => {
             const response = await api.post("/login", loginData, {
                 withCredentials: true,
             });
-            alert("ログイン成功: " + response.data.message);
+            // alert("ログイン成功: " + response.data.message);
             user.value = response.data.user;
             setAuthToken(response.data.token);
             router.push("/dashboard");
@@ -64,7 +63,7 @@ export const useAuthStore = defineStore("auth", () => {
         } finally {
             token.value = null;
             user.value = null;
-            localStorage.removeItem("token");
+            localStorage.removeItem("auth_token");
             router.push("/login");
         }
     };

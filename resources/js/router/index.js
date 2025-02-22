@@ -21,6 +21,11 @@ const router = createRouter({
 
 // ナビゲーションガード（ログインしていない場合はリダイレクト）
 router.beforeEach(async (to, from, next) => {
+    if (to.path === "/logout") {
+        const authStore = useAuthStore();
+        await authStore.logout();
+        next({ name: "login" });
+    }
     const authStore = useAuthStore();
     const { user, token } = storeToRefs(authStore);
     if (to.meta.requiresAuth) {

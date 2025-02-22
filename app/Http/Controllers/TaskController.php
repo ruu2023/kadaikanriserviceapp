@@ -27,8 +27,8 @@ class TaskController extends Controller
     ]);
     $data['content'] = strip_tags($data['content']); // XSS 対策 空が登録されても可
 
-    // $data['user_id'] = Auth::id(); // 現在ログインしているユーザーの ID を取得
-    return Auth::id();
+    $data['user_id'] = Auth::id(); // 現在ログインしているユーザーの ID を取得
+
     $task = Task::createTask($data);
     // 作成したタスクをJSON形式で返す
     return response()->json($task);
@@ -93,6 +93,7 @@ class TaskController extends Controller
     try {
       $data['content'] = $task->content;
       $data['user_id'] = Auth::id();
+
       Archive::createArchive($data);
 
       // 元のタスクを削除
