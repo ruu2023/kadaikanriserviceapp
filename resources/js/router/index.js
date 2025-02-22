@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AuthView from "../views/Auth.vue"; // `@/` が使えない場合に備えて相対パス
-import DashboardView from "../layouts/Dashboard.vue";
+import AuthView from "../pages/Auth.vue"; // `@/` が使えない場合に備えて相対パス
+import DashboardView from "../pages/Dashboard.vue";
+import { useAuthStore } from "../stores/authStore"; // Pinia のストアをインポート
+import { storeToRefs } from "pinia";
 
 const routes = [
     { path: "/login", name: "login", component: AuthView },
@@ -17,17 +19,25 @@ const router = createRouter({
     routes,
 });
 
-// computedを使ってローカルストレージからtokenを取得: 直接取得するとnullになる
-import { computed } from "vue";
-const isAuthenticated = computed(() => !!localStorage.getItem("token"));
-
 // ナビゲーションガード（ログインしていない場合はリダイレクト）
-router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !isAuthenticated) {
+router.beforeEach(async (to, from, next) => {
+    if (to.path === "/logout") {
+        const authStore = useAuthStore();
+        await authStore.logout();
         next({ name: "login" });
-    } else {
-        next();
     }
+    const authStore = useAuthStore();
+    const { user, token } = storeToRefs(authStore);
+    if (to.meta.requiresAuth) {
+        if (!user.value && token.value) {
+            await authStore.fetchUser();
+        }
+        if (!user.value) {
+            next({ name: "login" });
+            return;
+        }
+    }
+    next();
 });
 
 export default router;

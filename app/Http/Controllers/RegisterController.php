@@ -31,7 +31,7 @@ class RegisterController extends Controller
     ]);
 
     // 認証トークンを作成
-    $token = $user->createToken('YourAppName')->plainTextToken;
+    $token = $user->createToken('kadaikanriserviceapp')->plainTextToken;
 
     // トークンとユーザー情報を返す
     return response()->json([

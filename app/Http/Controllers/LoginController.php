@@ -26,6 +26,7 @@ class LoginController extends Controller
     }
 
     // 認証成功
+    /** @var \App\Models\User $user */
     $user = Auth::user();
     if (!$user) {
       return response()->json([
@@ -35,7 +36,7 @@ class LoginController extends Controller
     }
 
     // トークン発行（適切な権限を設定）
-    $token = $user->createToken('YourAppName', ['access:user'])->plainTextToken;
+    $token = $user->createToken('kadaikanriserviceapp', ['access:user'])->plainTextToken;
 
     return response()->json([
       'success' => true,

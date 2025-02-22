@@ -10,26 +10,29 @@ use App\Http\Controllers\RegisterController;
 // ユーザー認証
 Route::post("register", [RegisterController::class, "register"]);
 Route::post("login", [LoginController::class, "login"]);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+// Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-Route::post('/tokens/create', function (Request $request) {
-  $token = $request->user()->createToken($request->token_name);
+// Route::post('/tokens/create', function (Request $request) {
+//   $token = $request->user()->createToken($request->token_name);
 
-  return ['token' => $token->plainTextToken];
+//   return ['token' => $token->plainTextToken];
+// });
+
+Route::middleware('auth:sanctum')->group(function () {
+  Route::get('user', [AuthController::class, 'user']);
+  Route::post('logout', [AuthController::class, 'logout']);
+  Route::get('dashboard', function (Request $request) {
+    return response()->json(["message" => "Welcome to your dashboard, " . $request->user()->name]);
+  });
+
+  // 🔥 すべてのタスクのルートに認証を適用
+  Route::resource('tasks', TaskController::class);
+  // アーカイブのルート
+  Route::get('archives', [TaskController::class, 'archive']);
+  // タスクの完了
+  Route::post('tasks/{task}/complete-task', [TaskController::class, 'completeTask']);
 });
 
-Route::middleware("auth:sanctum")->get("dashboard", function (Request $request) {
-  return response()->json(["message" => "Welcome to your dashboard, " . $request->user()->name]);
-});
-
-// タスクのルート
-Route::resource('tasks', TaskController::class);
-
-// アーカイブのルート
-Route::get('archives', [TaskController::class, 'archive']);
 
 // タスクの並び替えのルート
-Route::post('/update-order', [TaskController::class, 'updateOrder']);
-
-// タスクの完了
-Route::post('/tasks/{task}/complete-task', [TaskController::class, 'completeTask']);
+Route::post('update-order', [TaskController::class, 'updateOrder']);

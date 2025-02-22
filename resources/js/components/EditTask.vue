@@ -41,7 +41,7 @@
 <script setup>
 import { ref } from "vue";
 import { useTaskStore } from '@/stores/taskStore';
-import axios from "axios";
+import api from "../plugins/axios";
 
 // タスクの状態管理
 const taskStore = useTaskStore();
@@ -58,7 +58,7 @@ const updateTask = async (index) => {
     const task = taskStore.tasks[index]; // 対象タスクを取得
 
     // API 呼び出し
-    const response = await axios.put(`api/tasks/${task.id}`, {
+    const response = await api.put(`/tasks/${task.id}`, {
       content: editedContent.value, // 更新する内容
     });
 
@@ -77,9 +77,8 @@ const updateTask = async (index) => {
 const deleteTask = async (index) => {
   try {
     const task = taskStore.tasks[index];// 対象タスクを取得
-    console.log(task.id);
     // API呼び出し
-    await axios.delete(`api/tasks/${task.id}`);
+    await api.delete(`/tasks/${task.id}`);
 
     // ローカル状態から削除
     taskStore.tasks = taskStore.tasks.filter((t) => t.id !== task.id);

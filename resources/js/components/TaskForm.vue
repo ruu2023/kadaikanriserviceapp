@@ -65,12 +65,10 @@
 import { onMounted, ref } from 'vue';
 import { useTaskStore } from '@/stores/taskStore';
 
-import axios from 'axios';
+import api from '../plugins/axios';
 import draggable from 'vuedraggable';
 
-// タスクの状態管理
-const taskStore = useTaskStore();
-
+const taskStore = useTaskStore(); // タスクの状態管理
 const inputContent = ref(''); // 入力フォーム
 const errorMessage = ref(''); // エラーメッセージ
 
@@ -89,7 +87,7 @@ const formatDate = (dateString) => dateString.split('T')[0];
 // 初回ロード時にタスクを取得
 const fetchTasks = async () => {
   try {
-    const response = await axios.get('api/tasks');
+    const response = await api.get('/tasks');
     taskStore.tasks = response.data;
   } catch (error) {
     console.error('タスク一覧の取得に失敗しました:', error);
@@ -100,7 +98,7 @@ const fetchTasks = async () => {
 const submitTask = async () => {
   errorMessage.value = ""; // 送信前にリセット
   try {
-    const response = await axios.post('api/tasks', {
+    const response = await api.post('/tasks', {
       content: inputContent.value,
     });
 
@@ -124,10 +122,10 @@ const updateTaskOrder = async () => {
   }));
 
   try {
-    await axios.post("api/update-order", { tasks: updatedTasks });
-    console.log("Order updated successfully");
+    await api.post("/update-order", { tasks: updatedTasks });
+    console.log("タスクの並び替え成功");
   } catch (error) {
-    console.error("Error updating order:", error);
+    console.error("タスクの並び替え失敗:", error);
   }
 };
 
@@ -139,7 +137,7 @@ const onDragEnd = async () => {
 //タスクの完了
 const handleDone = async (id) => {
   try {
-    await axios.post(`api/tasks/${id}/complete-task`);
+    await api.post(`/tasks/${id}/complete-task`);
     // ローカルのリストから削除
     taskStore.tasks = taskStore.tasks.filter(task => task.id !== id);
   } catch (error) {

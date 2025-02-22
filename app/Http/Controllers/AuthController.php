@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+  public function user(Request $request)
+  {
+    return response()->json($request->user());
+  }
   public function logout(Request $request)
   {
     // 現在のユーザーのトークンを無効化

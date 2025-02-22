@@ -19,7 +19,7 @@
 
 <script>
 import { ref } from "vue";
-import axios from "axios";
+import { useAuthStore } from "../stores/authStore"; // Pinia のストアをインポート
 
 export default {
   name: "SideBar",
@@ -34,8 +34,9 @@ export default {
 
     const logout = async () => {
       try {
-        await axios.post(route("logout"));
-        window.location.href = route("home"); // ログアウト後にリダイレクト
+        const authStore = useAuthStore();
+        await authStore.logout();
+        window.location.href = '/login'; // ログアウト後にリダイレクト
       } catch (error) {
         console.error("Logout failed:", error);
       }
