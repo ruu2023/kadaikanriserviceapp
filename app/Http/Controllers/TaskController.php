@@ -3,53 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\Archive;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use App\Services\TaskService;
 
 class TaskController extends Controller
 {
+  protected $taskService;
+
+  public function __construct(TaskService $taskService)
+  {
+    $this->taskService = $taskService;
+  }
+
   public function dashboard()
   {
-    $tasks = Task::all();
+    $tasks = $this->taskService->getAllTasks();
     return view("dashboard", compact('tasks'));
   }
+
   public function index()
   {
-    $tasks = Task::orderBy('row_order', 'asc')->get();
+    $tasks = $this->taskService->getOrderedTasks();
     return response()->json($tasks);
   }
+
   public function store(Request $request)
   {
-    $data = $request->validate([
-      'content' => 'required|string|max:140',
-    ]);
-    $data['content'] = strip_tags($data['content']); // XSS 対策 空が登録されても可
-
-    $data['user_id'] = Auth::id(); // 現在ログインしているユーザーの ID を取得
-
-    $task = Task::createTask($data);
-    // 作成したタスクをJSON形式で返す
-    return response()->json($task);
+    return $this->taskService->store($request);
   }
+
   public function update(Request $request, Task $task)
   {
-    // バリデーション
-    $request->validate([
-      'content' => 'required|string|max:140',
-    ]);
-
     try {
-      // タスクの更新
-      $task->update([
-        'content' => $request->content,
-      ]);
+      $updatedTask = $this->taskService->update($request, $task);
 
-      // 更新されたタスクを返す
       return response()->json([
         'message' => 'Task updated successfully',
-        'content' => $task->content
+        'content' => $updatedTask->content
       ], 200);
     } catch (\Exception $e) {
       return response()->json([
@@ -58,25 +48,25 @@ class TaskController extends Controller
       ], 500);
     }
   }
+
   public function destroy($id)
   {
-    $task = Task::findOrFail($id);
-    $task->delete();
-
+    $this->taskService->destroy($id);
     return response()->json(['message' => 'タスク削除成功'], 200);
   }
 
   public function deleteAllTasks()
   {
-    Task::truncate();
+    $this->taskService->deleteAllTasks();
     return response()->json(['message' => '全てのタスクを削除しました'], 200);
   }
 
   public function deleteAllArchive()
   {
-    Archive::truncate();
+    $this->taskService->deleteAllArchive();
     return response()->json(['message' => '全てのアーカイブを削除しました'], 200);
   }
+
   public function updateOrder(Request $request)
   {
     // バリデーション
@@ -87,12 +77,7 @@ class TaskController extends Controller
     ]);
 
     try {
-      foreach ($validated['tasks'] as $taskData) {
-        // 各タスクの order を更新
-        Task::where('id', $taskData['id'])
-          ->update(['row_order' => $taskData['row_order']]);
-      }
-
+      $this->taskService->updateOrder($validated['tasks']);
       return response()->json(['message' => 'Order updated successfully'], 200);
     } catch (\Exception $e) {
       // エラー時のレスポンス
@@ -103,13 +88,7 @@ class TaskController extends Controller
   public function completeTask(Task $task)
   {
     try {
-      $data['content'] = $task->content;
-      $data['user_id'] = Auth::id();
-
-      Archive::createArchive($data);
-
-      // 元のタスクを削除
-      $task->delete();
+      $this->taskService->completeTask($task);
 
       return response()->json([
         'message' => 'Task archived successfully'
@@ -121,9 +100,10 @@ class TaskController extends Controller
       ], 500);
     }
   }
+
   public function archive()
   {
-    $archives = Archive::orderBy('row_order', 'asc')->get();
+    $archives = $this->taskService->getArchives();
     return response()->json($archives);
   }
 }
