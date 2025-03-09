@@ -65,6 +65,18 @@ class TaskController extends Controller
 
     return response()->json(['message' => 'タスク削除成功'], 200);
   }
+
+  public function deleteAllTasks()
+  {
+    Task::truncate();
+    return response()->json(['message' => '全てのタスクを削除しました'], 200);
+  }
+
+  public function deleteAllArchive()
+  {
+    Archive::truncate();
+    return response()->json(['message' => '全てのアーカイブを削除しました'], 200);
+  }
   public function updateOrder(Request $request)
   {
     // バリデーション

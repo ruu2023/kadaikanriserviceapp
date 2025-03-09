@@ -2,7 +2,6 @@
   <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <slot></slot>
-      <!-- <button @click="closeModal" class="modal-close">閉じる</button> -->
     </div>
   </div>
 </template>

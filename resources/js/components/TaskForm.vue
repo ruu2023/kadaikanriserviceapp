@@ -22,7 +22,6 @@
               <div>
                 <button class="border border-slate-800 p-2 text-xs"  @click.stop="handleDone(element.id)">Done</button>
               </div>
-              <!-- TODO:hiddenを修正 -->
               <p class="line-clamp-2 break-all w-full">{{ element.content }}</p> <p class="hidden">{{ formatDate(element.created_at) }}</p>
             </div>
           </div>

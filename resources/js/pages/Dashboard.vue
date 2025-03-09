@@ -27,7 +27,7 @@
         <div class="md:hidden">
           <button @click="toggleSidebar" class="p-4">☰</button>
         </div>
-        <header-component></header-component>
+        <header-component :current-tab="currentTab"></header-component>
       </div>
       <!-- タスクフォーム 切り替え -->
       <div class="flex-1 overflow-y-auto">
@@ -42,59 +42,60 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import TaskForm from '../components/TaskForm.vue';
-import Archive from '../components/Archive.vue';
-import HeaderComponent from '../components/Header.vue';
-import FooterComponent from '../components/Footer.vue';
-import SideBarComponent from '../components/SideBar.vue';
-import ModalComponent from '../components/Modal.vue';
-import EditTask from '../components/EditTask.vue';
+  import { ref, computed } from 'vue';
+  import TaskForm from '../components/TaskForm.vue';
+  import Archive from '../components/Archive.vue';
+  import HeaderComponent from '../components/Header.vue';
+  import FooterComponent from '../components/Footer.vue';
+  import SideBarComponent from '../components/SideBar.vue';
+  import ModalComponent from '../components/Modal.vue';
+  import EditTask from '../components/EditTask.vue';
 
-// サイドバーの開閉状態
-const isSidebarOpen = ref(false);
+  // サイドバーの開閉状態
+  const isSidebarOpen = ref(false);
 
-// 現在のタブ
-const currentTab = ref("TaskForm");
+  // 現在のタブ
+  const currentTab = ref("TaskForm");
 
-// 表示するコンポーネントを計算
-const currentTabComponent = computed(() => {
-  return currentTab.value === "Archive" ? Archive : TaskForm;
-});
+  // 表示するコンポーネントを計算
+  const currentTabComponent = computed(() => {
+    return currentTab.value === "Archive" ? Archive : TaskForm;
+  });
 
-// サイドバーの開閉を切り替え
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value;
-};
+  // サイドバーの開閉を切り替え
+  const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
+  };
 
-// タブの変更
-const updateTab = (tab) => {
-  currentTab.value = tab;
-};
+  // タブの変更
+  const updateTab = (tab) => {
+    currentTab.value = tab;
+    toggleSidebar();
+  };
 
-// モーダルの表示状態
-const isModalOpen = ref(false);
+  // モーダルの表示状態
+  const isModalOpen = ref(false);
 
-// モーダルの表示を切り替え
-const toggleModal = () => {
-  isModalOpen.value = !isModalOpen.value;
-};
-</script>
+  // モーダルの表示を切り替え
+  const toggleModal = () => {
+    isModalOpen.value = !isModalOpen.value;
+  };
+  </script>
 
-<style scoped>
-/* サイドバーが開いているときのスタイル */
-.sidebar {
-  left: -100%;
-  transition: left 0.3s ease;
-}
-.sidebar.show {
-  left: 0;
-}
+  <style scoped>
+  /* サイドバーが開いているときのスタイル */
+  .sidebar {
+    left: -100%;
+    transition: left 0.3s ease;
+  }
+  .sidebar.show {
+    left: 0;
+  }
 
-/* ハンバーガーメニュー */
-button {
-  background-color: transparent;
-  border: none;
-  font-size: 24px;
-}
+  /* ハンバーガーメニュー */
+  button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+  }
 </style>

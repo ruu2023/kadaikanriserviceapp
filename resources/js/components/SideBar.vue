@@ -1,13 +1,16 @@
 <template>
   <div class="text-sm">
     <div class="flex items-center justify-between p-4 bg-gray-900">
-      <!-- <p>{{ user.name }}</p> -->
+
+      <!-- ユーザー名 -->
+      <p class="ml-1 text-md text-white">{{ user.name }}</p>
       <!-- ログアウトボタン -->
       <form @submit.prevent="logout">
         <button type="submit" style="font-size:0.5rem;" class="text-xs text-cyan-200 p-2 border border-cyan-100">
             ログアウト
         </button>
       </form>
+
     </div>
     <div>
       <button @click="changeTab('TaskForm')" :class="{'bg-violet-900': selectedTab === 'TaskForm'}" class="block p-4 text-left w-full">Task</button>
@@ -17,37 +20,32 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
-import { useAuthStore } from "../stores/authStore"; // Pinia のストアをインポート
+import { useAuthStore } from "../stores/authStore";
+import { storeToRefs } from "pinia";
 
-export default {
-  name: "SideBar",
-  setup(_, { emit }) {
-    // const user = ref(window.Laravel.user); // `ref()` を使ってリアクティブに
-    const selectedTab = ref("TaskForm");   // 初期タブをリアクティブに管理
+// emitsの定義
+const emit = defineEmits(['tab-changed']);
 
-    const changeTab = (tab) => {
-      selectedTab.value = tab;
-      emit("tab-changed", tab); // 親コンポーネントにイベントを送信
-    };
+// 状態管理
+const selectedTab = ref("TaskForm");
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
-    const logout = async () => {
-      try {
-        const authStore = useAuthStore();
-        await authStore.logout();
-        window.location.href = '/login'; // ログアウト後にリダイレクト
-      } catch (error) {
-        console.error("Logout failed:", error);
-      }
-    };
+// タブ切り替え処理
+const changeTab = (tab) => {
+  selectedTab.value = tab;
+  emit("tab-changed", tab);
+};
 
-    return {
-      // user,
-      selectedTab,
-      changeTab,
-      logout
-    };
-  },
+// ログアウト処理
+const logout = async () => {
+  try {
+    await authStore.logout();
+    window.location.href = '/login';
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
 };
 </script>
